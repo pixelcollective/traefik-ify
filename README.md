@@ -19,9 +19,9 @@ In ./example.com/:
 2. Rename `env.example` to `.env`.
 3. `docker-compose up -d`
 
-Lastly, add example.local to your `/etc/hosts`.
+Lastly, add example.test to your `/etc/hosts`.
 
-WordPress installation screen should be available at `example.local`.
+WordPress installation screen should be available at `example.test`.
 
 You can monitor the traefik web GUI at `localhost`.
 
@@ -37,7 +37,7 @@ These are the files you'll want to add (root is bedrock):
 
 ``` env
 # Docker local
-DEV_WP=example.local
+DEV_WP=example.test
 DEV_WP_HOME=http://${DEV_WP}
 DEV_WP_SITEURL=${DEV_WP_HOME}/wp
 ```
