@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+
+  database:
+    image: mariadb
+    restart: unless-stopped
+    networks:
+      - traefikpress
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./database:/var/lib/mysql
+
+  php:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - database
+    networks:
+      - traefikpress
+    environment:
+      DB_HOST: database
+      DB_NAME: ${DB_NAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_USER: root
+      AUTH_KEY: generateme
+      AUTH_SALT: generateme
+      LOGGED_IN_KEY: generateme
+      LOGGED_IN_SALT: generateme
+      NONCE_KEY: generateme
+      NONCE_SALT: generateme
+      SECURE_AUTH_KEY: generateme
+      SECURE_AUTH_SALT: generateme
+      WP_ENV: development
+      WP_HOME: ${DEV_WP_HOME}
+      WP_SITEURL: ${DEV_WP_SITEURL}
+    volumes:
+      - ./:/code
+      - ./config/docker/php.ini:/usr/local/etc/php/conf.d/bedrock.ini
+    links:
+      - database
+
+  wordpress:
+    image: nginx
+    restart: unless-stopped
+    networks:
+      - traefikpress
+    labels:
+      traefik.backend: "${DEV_WP}"
+      traefik.docker.network: "traefikpress"
+      traefik.frontend.rule: "Host:${DEV_WP}"
+      traefik.enable: "true"
+      traefik.port: "80"
+    volumes:
+      - ./:/code
+      - ./config/docker/site.nginx.conf:/etc/nginx/conf.d/site.nginx.conf
+    links:
+      - php
+
+networks:
+  traefikpress:
+    external: true
