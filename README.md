@@ -53,3 +53,9 @@ Just comment that last bit out if you wanna flip back over to Ansible for a spel
 ## Party!
 
 You should be good to  `docker-compose up` from your traefik and existing bedrock. You'll need to port the db.
+
+## Credits
+
+* [roots/bedrock](https://github.com/roots/bedrock)
+* [austinpray/bedrock-testbed](https://github.com/austinpray/bedrock-testbed)
+* [saturate/traefik-wordpress](https://github.com/Saturate/traefik-wordpress)
