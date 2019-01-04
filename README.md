@@ -1,5 +1,7 @@
 # Traefik-ify
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3e0216bab8504573b62ce72b4441c2e2)](https://www.codacy.com/app/pixelcollective/traefik-ify?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pixelcollective/traefik-ify&amp;utm_campaign=Badge_Grade)
+
 > Easily Traefik-ify your roots/bedrock WordPress installation. It's great! It's easy to do! Nothing to lose (except some port conflicts!)
 
 And it's basically non-destructive for an existing Trellis setup. Dank.
