@@ -6,7 +6,7 @@ services:
     image: mariadb
     restart: unless-stopped
     networks:
-      - traefikpress
+      - wordpress-internal
     environment:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -20,6 +20,7 @@ services:
       - database
     networks:
       - traefikpress
+      - wordpress-internal
     environment:
       DB_HOST: database
       DB_NAME: ${DB_NAME}
@@ -47,6 +48,7 @@ services:
     restart: unless-stopped
     networks:
       - traefikpress
+      - wordpress-internal
     labels:
       traefik.backend: "${DEV_WP}"
       traefik.docker.network: "traefikpress"
@@ -62,3 +64,5 @@ services:
 networks:
   traefikpress:
     external: true
+  wordpress-internal:
+    driver: bridge
