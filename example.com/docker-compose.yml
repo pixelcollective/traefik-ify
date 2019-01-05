@@ -31,8 +31,6 @@ services:
     volumes:
       - ./:/code
       - ./config/docker/php.ini:/usr/local/etc/php/conf.d/bedrock.ini
-    links:
-      - database
 
   wordpress:
     image: nginx
