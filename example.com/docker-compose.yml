@@ -24,19 +24,10 @@ services:
     environment:
       DB_HOST: database
       DB_NAME: ${DB_NAME}
-      DB_PASSWORD: ${DB_PASSWORD}
       DB_USER: root
-      AUTH_KEY: generateme
-      AUTH_SALT: generateme
-      LOGGED_IN_KEY: generateme
-      LOGGED_IN_SALT: generateme
-      NONCE_KEY: generateme
-      NONCE_SALT: generateme
-      SECURE_AUTH_KEY: generateme
-      SECURE_AUTH_SALT: generateme
-      WP_ENV: development
-      WP_HOME: ${DEV_WP_HOME}
-      WP_SITEURL: ${DEV_WP_SITEURL}
+      DB_PASSWORD: ${DB_PASSWORD}
+      WP_HOME: ${WP_HOME}
+      WP_SITEURL: ${WP_SITEURL}
     volumes:
       - ./:/code
       - ./config/docker/php.ini:/usr/local/etc/php/conf.d/bedrock.ini
