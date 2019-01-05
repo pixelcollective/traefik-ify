@@ -16,6 +16,6 @@ ini_set('display_errors', 1);
 Config::define('DISALLOW_FILE_MODS', false);
 
 // Dockerize
-Config::define('WP_HOME', env('DEV_WP_HOME'));
-Config::define('WP_SITEURL', env('DEV_WP_SITEURL'));
+Config::define('WP_HOME', env('WP_HOME'));
+Config::define('WP_SITEURL', env('WP_SITEURL'));
 
