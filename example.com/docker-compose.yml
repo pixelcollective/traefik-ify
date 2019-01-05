@@ -37,6 +37,10 @@ services:
   wordpress:
     image: nginx
     restart: unless-stopped
+    depends_on:
+      - php
+    links:
+      - php
     networks:
       - traefikpress
       - wordpress-internal
@@ -49,8 +53,6 @@ services:
     volumes:
       - ./:/code
       - ./config/docker/site.nginx.conf:/etc/nginx/conf.d/site.nginx.conf
-    links:
-      - php
 
 networks:
   traefikpress:
