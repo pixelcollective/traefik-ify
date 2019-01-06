@@ -6,7 +6,7 @@ services:
     image: mariadb
     restart: unless-stopped
     networks:
-      - traefikpress
+      - wordpress-internal
     environment:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
@@ -20,33 +20,28 @@ services:
       - database
     networks:
       - traefikpress
+      - wordpress-internal
     environment:
       DB_HOST: database
       DB_NAME: ${DB_NAME}
-      DB_PASSWORD: ${DB_PASSWORD}
       DB_USER: root
-      AUTH_KEY: generateme
-      AUTH_SALT: generateme
-      LOGGED_IN_KEY: generateme
-      LOGGED_IN_SALT: generateme
-      NONCE_KEY: generateme
-      NONCE_SALT: generateme
-      SECURE_AUTH_KEY: generateme
-      SECURE_AUTH_SALT: generateme
-      WP_ENV: development
-      WP_HOME: ${DEV_WP_HOME}
-      WP_SITEURL: ${DEV_WP_SITEURL}
+      DB_PASSWORD: ${DB_PASSWORD}
+      WP_HOME: ${WP_HOME}
+      WP_SITEURL: ${WP_SITEURL}
     volumes:
       - ./:/code
       - ./config/docker/php.ini:/usr/local/etc/php/conf.d/bedrock.ini
-    links:
-      - database
 
   wordpress:
     image: nginx
     restart: unless-stopped
+    depends_on:
+      - php
+    links:
+      - php
     networks:
       - traefikpress
+      - wordpress-internal
     labels:
       traefik.backend: "${DEV_WP}"
       traefik.docker.network: "traefikpress"
@@ -56,9 +51,9 @@ services:
     volumes:
       - ./:/code
       - ./config/docker/site.nginx.conf:/etc/nginx/conf.d/site.nginx.conf
-    links:
-      - php
 
 networks:
   traefikpress:
     external: true
+  wordpress-internal:
+    driver: bridge
