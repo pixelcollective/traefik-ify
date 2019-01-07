@@ -1,0 +1,66 @@
+version: '3'
+
+services:
+
+  database:
+    image: mariadb
+    container_name: ${DOMAIN_CURRENT_SITE}_mariadb
+    restart: always
+    networks:
+      - bedrock
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./database:/var/lib/mysql
+
+  php:
+    build: .
+    restart: always
+    container_name: ${DOMAIN_CURRENT_SITE}_bedrock
+    depends_on:
+      - database
+    links:
+      - database
+    networks:
+      - traefikify
+      - bedrock
+    environment:
+      DB_HOST: database
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      WP_HOME: ${WP_HOME}
+      WP_SITEURL: ${WP_SITEURL}
+    volumes:
+      - ./:/code
+      - ./config/docker/php.ini:/usr/local/etc/php/conf.d/bedrock.ini
+
+  wordpress:
+    image: nginx
+    restart: always
+    container_name: ${DOMAIN_CURRENT_SITE}_wordpress
+    depends_on:
+      - php
+    links:
+      - php
+    networks:
+      - traefikify
+      - bedrock
+    labels:
+      traefik.backend: "${COMPOSE_PROJECT}"
+      traefik.docker.network: "traefikify"
+      traefik.frontend.rule: "Host:${DOMAIN_CURRENT_SITE}"
+      traefik.enable: "true"
+      traefik.port: "80"
+    volumes:
+      - ./:/code
+      - ./config/docker/site.nginx.conf:/etc/nginx/conf.d/site.nginx.conf
+
+networks:
+  traefikify:
+    external: true
+  bedrock:
+    external: false

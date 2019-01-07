@@ -1,60 +1,58 @@
 # Traefik-ify
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3e0216bab8504573b62ce72b4441c2e2)](https://www.codacy.com/app/pixelcollective/traefik-ify?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pixelcollective/traefik-ify&amp;utm_campaign=Badge_Grade)
+[![Roots](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/roots/roots-example-project.com/master/site/composer.json?token=R2l0SHViIFRva2VuIEdvZXMgSGVyZQ==&label=wordpress&logo=roots&logoColor=white&query=$.require["roots/wordpress"]&colorB=2b3072&colorA=525ddc)](//roots.io) ![Docker](https://img.shields.io/badge/docker-rules-blue.svg) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3e0216bab8504573b62ce72b4441c2e2)](https://www.codacy.com/app/pixelcollective/traefik-ify?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pixelcollective/traefik-ify&amp;utm_campaign=Badge_Grade) [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com) [![Gitter](https://img.shields.io/badge/chat-on%20gitter-purple.svg)](https://gitter.im/Tiny-Pixel/Traefik-ify?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
 
-> Easily Traefik-ify your roots/bedrock WordPress installation. It's great! It's easy to do! Nothing to lose (except some port conflicts!)
+> Easily Traefik-ify your roots/bedrock WordPress installation. It's great! It's super easy to do! Nothing to lose (except some port conflicts!)
 
 And it's basically non-destructive for an existing Trellis setup. Dank.
 
+## Requirements
+
+ 1. Docker
+ 2. Docker-compose
+
 ## Try it out
 
-In ./traefik/:
+The following assumes you are running [Bedrock](https://github.com/roots/bedrock) in a local environment.
 
-1. `docker network create traefikpress`
-2. `docker-compose up -d`
+Run the following commands from the `traefik` directory:
 
-In ./example.com/:
+ 1. `docker network create traefikify`
+ 2. `docker-compose up -d`
 
-1. `composer install`
-2. Rename `env.example` to `.env`.
-3. `docker-compose up -d`
+Run the following commands from the `example.com` directory:
 
-Lastly, add example.test to your `/etc/hosts`.
+ 1. `composer install`
+ 2. `mv env.example .env`
+ 3. `docker-compose up -d`
 
-WordPress installation screen should be available at `example.test`.
+You will then need to add `example.test` to `/etc/hosts`, or however you manage your virtual hosts.
 
-You can monitor the traefik web GUI at `localhost`.
+The WordPress installation screen should be available at `example.test`. Additionally, you can monitor traefik at `localhost`.
 
 ## Add to existing install
 
-These are the files you'll want to add (root is bedrock):
+The `mixins` directory contains everything you need.
 
-1. `./config/docker/` (make sure to update the nginx server name)
-2. `./Dockerfile`
-3. `./docker-compose.yml`
-4. Add `database` to your `.gitignore` 🙀
-5. Add something like the following to your `./.env`:
+ 1. Copy `./config/docker/` to your `config` directory.
+ 2. Copy `./Dockerfile` to bedrock root.
+ 3. Copy `./docker-compose.yml` to bedrock root.
+ 4. Add `database` to your `.gitignore` 🙀
+ 5. Make sure the variables in the traefik-ify `env.example` are included in your existing `.env`. It should look something like this:
 
 ``` env
-# Docker local
-DEV_WP=example.test
-DEV_WP_HOME=http://${DEV_WP}
-DEV_WP_SITEURL=${DEV_WP_HOME}/wp
+WP_ENV=development
+DOMAIN_CURRENT_SITE=example.test
+WP_HOME=http://example.test
+WP_SITEURL=http://example.test/wp
+DB_NAME=example_test_development
+DB_USER=example_test
+DB_PASSWORD=example_test
 ```
 
-6. Add something like this to `./config/environments/development.php`:
+## Party
 
-```
-// Dockerize
-Config::define('WP_HOME', env('DEV_WP_HOME'));
-Config::define('WP_SITEURL', env('DEV_WP_SITEURL'));
-```
-
-Just comment that last bit out if you wanna flip back over to Ansible for a spell. This is the only part of the config that overlaps.
-
-## Party!
-
-You should be good to  `docker-compose up` from your traefik and existing bedrock. You'll need to port the db.
+You should be good to execute `docker-compose up` from `traefik`, then your Bedrock root. You'll notice the database mounts to a directory in Bedrock. You can change this behavior (and lots of other things) in `docker-compose.yml`.
 
 ## Credits
 
