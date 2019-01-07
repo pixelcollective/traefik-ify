@@ -4,27 +4,33 @@ services:
 
   database:
     image: mariadb
-    restart: unless-stopped
+    container_name: ${DOMAIN_CURRENT_SITE}_mariadb
+    restart: always
     networks:
-      - wordpress-internal
+      - bedrock
     environment:
       MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     volumes:
       - ./database:/var/lib/mysql
 
   php:
     build: .
-    restart: unless-stopped
+    restart: always
+    container_name: ${DOMAIN_CURRENT_SITE}_bedrock
     depends_on:
       - database
+    links:
+      - database
     networks:
-      - traefikpress
-      - wordpress-internal
+      - traefikify
+      - bedrock
     environment:
       DB_HOST: database
       DB_NAME: ${DB_NAME}
-      DB_USER: root
+      DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       WP_HOME: ${WP_HOME}
       WP_SITEURL: ${WP_SITEURL}
@@ -34,18 +40,19 @@ services:
 
   wordpress:
     image: nginx
-    restart: unless-stopped
+    restart: always
+    container_name: ${DOMAIN_CURRENT_SITE}_wordpress
     depends_on:
       - php
     links:
       - php
     networks:
-      - traefikpress
-      - wordpress-internal
+      - traefikify
+      - bedrock
     labels:
-      traefik.backend: "${DEV_WP}"
-      traefik.docker.network: "traefikpress"
-      traefik.frontend.rule: "Host:${DEV_WP}"
+      traefik.backend: "${COMPOSE_PROJECT}"
+      traefik.docker.network: "traefikify"
+      traefik.frontend.rule: "Host:${DOMAIN_CURRENT_SITE}"
       traefik.enable: "true"
       traefik.port: "80"
     volumes:
@@ -53,7 +60,7 @@ services:
       - ./config/docker/site.nginx.conf:/etc/nginx/conf.d/site.nginx.conf
 
 networks:
-  traefikpress:
+  traefikify:
     external: true
-  wordpress-internal:
-    driver: bridge
+  bedrock:
+    external: false
