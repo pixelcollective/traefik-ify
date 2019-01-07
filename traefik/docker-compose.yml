@@ -13,8 +13,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock #So that Traefik can listen to the Docker events
       - ./traefik.toml:/traefik.toml
     networks:
-      - traefikpress
+      - traefikify
 
 networks:
-  traefikpress:
+  traefikify:
     external: true
