@@ -8,8 +8,8 @@ And it's basically non-destructive for an existing Trellis setup. Dank.
 
 ## Requirements
 
- 1. Docker
- 2. Docker-compose
+1. Docker
+2. Docker-compose
 
 ## Try it out
 
@@ -17,14 +17,14 @@ The following assumes you are running [Bedrock](https://github.com/roots/bedrock
 
 Run the following commands from the `traefik` directory:
 
- 1. `docker network create traefikify`
- 2. `docker-compose up -d`
+1. `docker network create traefikify`
+2. `docker-compose up -d`
 
 Run the following commands from the `example.com` directory:
 
- 1. `composer install`
- 2. `mv env.example .env`
- 3. `docker-compose up -d`
+1. `composer install`
+2. `mv env.example .env`
+3. `docker-compose up -d`
 
 You will then need to add `example.test` to `/etc/hosts`, or however you manage your virtual hosts.
 
@@ -34,11 +34,11 @@ The WordPress installation screen should be available at `example.test`. Additio
 
 The `mixins` directory contains everything you need.
 
- 1. Copy `./config/docker/` to your `config` directory.
- 2. Copy `./Dockerfile` to bedrock root.
- 3. Copy `./docker-compose.yml` to bedrock root.
- 4. Add `database` to your `.gitignore` 🙀
- 5. Make sure the variables in the traefik-ify `env.example` are included in your existing `.env`. It should look something like this:
+1. Copy `./config/docker/` to your `config` directory.
+2. Copy `./Dockerfile` to bedrock root.
+3. Copy `./docker-compose.yml` to bedrock root.
+4. Add `database` to your `.gitignore` 🙀
+5. Make sure the variables in the traefik-ify `env.example` are included in your existing `.env`. It should look something like this:
 
 ``` env
 WP_ENV=development
