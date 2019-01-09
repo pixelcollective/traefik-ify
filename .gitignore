@@ -1,2 +1,4 @@
+node_modules
+vendor
 example.com/database
 example.com/.env
