@@ -2,9 +2,11 @@
 
 [![Roots](https://img.shields.io/badge/dynamic/json.svg?url=https://raw.githubusercontent.com/roots/roots-example-project.com/master/site/composer.json?token=R2l0SHViIFRva2VuIEdvZXMgSGVyZQ==&label=wordpress&logo=roots&logoColor=white&query=$.require["roots/wordpress"]&colorB=2b3072&colorA=525ddc)](//roots.io) ![Docker](https://img.shields.io/badge/docker-rules-blue.svg) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3e0216bab8504573b62ce72b4441c2e2)](https://www.codacy.com/app/pixelcollective/traefik-ify?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pixelcollective/traefik-ify&amp;utm_campaign=Badge_Grade) [![Reviewed by Hound](https://img.shields.io/badge/Reviewed_by-Hound-8E64B0.svg)](https://houndci.com) [![Gitter](https://img.shields.io/badge/chat-on%20gitter-purple.svg)](https://gitter.im/Tiny-Pixel/Traefik-ify?utm_source=share-link&utm_medium=link&utm_campaign=share-link) [![Waffle.io - Columns and their card count](https://badge.waffle.io/pixelcollective/traefik-ify.svg?columns=all)](https://waffle.io/pixelcollective/traefik-ify)
 
-> Easily Traefik-ify your roots/bedrock WordPress installation. It's great! It's super easy to do! Nothing to lose (except some port conflicts!)
+> Easily add Traefik and Docker support to your roots/bedrock project. It's great! It's super easy to do! Nothing to lose (except some port conflicts!)
 
 And it's basically non-destructive for an existing Trellis setup. Dank.
+
+My Docker VMs now start up in less than ten seconds. They take up a fraction of the harddrive space. They use a completely negligible amount of RAM.
 
 ## Requirements
 
@@ -32,7 +34,7 @@ The WordPress installation screen should be available at `example.test`. Additio
 
 ## Add to existing install
 
-The `mixins` directory contains everything you need.
+The `mixins` directory contains everything you need. You should be able to more-or-less just drop those files in and get to work, but read on:
 
 1. Copy `./config/docker/` to your `config` directory.
 2. Copy `./Dockerfile` to bedrock root.
