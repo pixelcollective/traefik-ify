@@ -1,0 +1,88 @@
+version: 2
+jobs:
+  install_docker:
+    machine: true
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+      - run:
+          name: Install Docker Compose
+          command: |
+            set -x
+            curl -L https://github.com/docker/compose/releases/download/1.11.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
+  install_yarn:
+    machine: true
+    working_directory: ~/repo
+    steps:
+      - run:
+        name: Install Node repository
+        command: |
+          curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+          echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - run:
+        name: Update apt packages
+        command: sudo apt-get update && sudo apt-get install yarn
+      - run:
+        name: Add Node to path
+        command: export PATH="$PATH:`yarn global bin`"
+  create_docker_network:
+    machine: true
+    working_directory: ~/repo
+    steps:
+      - run:
+        name: Create traefikify network
+        command: docker create network traefikify
+  compose_traefik:
+    machine: true
+    working_directory: ~/repo/traefik
+    steps:
+      - run:
+        name: Run Traefik docker image
+        command: docker-compose up -d
+  compose_bedrock:
+    machine: true
+    working_directory: ~/repo
+    steps:
+      - run:
+        name: Run Bedrock docker image
+        command: docker-compose up -d
+  install_node_modules:
+    machine: true
+    working_directory: ~/repo
+    steps:
+      - run:
+        name: Install node modules
+        command: yarn
+workflows:
+  version: 2
+    build:
+      jobs:
+        - install_docker
+        - test_docker:
+            requires:
+              - install_docker
+        - create_network
+            requires:
+              - test_docker
+        - test_network:
+            requires:
+              - create_network
+        - compose_traefik
+            requires:
+              - test_network
+        - test_traefik
+            requires:
+              - compose_traefik
+        - compose_bedrock
+            requires:
+              - test_traefik
+

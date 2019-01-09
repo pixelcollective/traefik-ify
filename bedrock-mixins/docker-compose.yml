@@ -50,7 +50,7 @@ services:
       - traefikify
       - bedrock
     labels:
-      traefik.backend: "${DOMAIN_CURRENT_SITE}"
+      traefik.backend: "${COMPOSE_PROJECT}"
       traefik.docker.network: "traefikify"
       traefik.frontend.rule: "Host:${DOMAIN_CURRENT_SITE}"
       traefik.enable: "true"
